@@ -1,28 +1,83 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clockwatch</title>
     <style>
-        body {overflow: hidden; background-color: black; color: white; font-family: system-ui;}
-        div {font-size: 25vw; text-align: center; font-weight: bold; line-height: 1;}
+        body {
+            overflow: hidden;
+            background-color: black;
+            color: white;
+            font-family: system-ui;
+        }
+
+        main {
+            font-size: 25vw;
+            text-align: center;
+            font-weight: bold;
+            line-height: 1;
+            user-select: none;
+        }
+
+        body.no-sec main {
+            font-size: 38vw;
+        }
+
+        body.no-sec #secondsPart {
+            display: none;
+        }
     </style>
 </head>
+
 <body>
-    <div><span id="hour">00</span>:<span id="minute">00</span>:<span id="secound">00</span></div>
+    <main><span id="hours">00</span>:<span id="minutes">00</span><span id="secondsPart">:<span
+                id="seconds">00</span></span></main>
+    <fieldset>
+        <legend>Settings</legend>
+        <div>
+            <input type="checkbox" id="secondsToggle" onchange="toggleSeconds()" checked>
+            <label for="secondsToggle">Show seconds</label>
+        </div>
+        <!-- <div>
+            <label for="timezone">Time zone</label>
+            <select id="timezone" onchange="tzChange()">
+                <option value="none" selected>Client</option>
+                <option value="kl">Greenland</option>
+                <option value="dk">Denmark</option>
+            </select>
+        </div> -->
+    </fieldset>
     <script>
-        const hou = document.getElementById("hour");
-        const min = document.getElementById("minute");
-        const sec = document.getElementById("secound");
+        const h = document.getElementById("hours");
+        const m = document.getElementById("minutes");
+        const s = document.getElementById("seconds");
+        let tz = "none";
+
+        function tzChange() {
+            tz = document.getElementById("timezone").value;
+            console.log(tz);
+        }
+
         setInterval(updateTime, 1000);
-        
+
         function updateTime() {
             let time = new Date();
-            hou.innerText = time.getHours();
-            min.innerText = time.getMinutes();
-            sec.innerText = time.getSeconds();
+            h.innerText = time.getHours().toString().padStart(2, '0');
+            m.innerText = time.getMinutes().toString().padStart(2, '0');
+            s.innerText = time.getSeconds().toString().padStart(2, '0');
+        }
+
+        function toggleSeconds() {
+            const b = document.body;
+            if (b.classList.contains("no-sec")) {
+                b.classList.remove("no-sec");
+            } else {
+                b.classList.add("no-sec");
+            }
         }
     </script>
 </body>
+
 </html>
