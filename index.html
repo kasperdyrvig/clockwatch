@@ -10,7 +10,8 @@
             overflow: hidden;
             background-color: black;
             color: white;
-            font-family: system-ui;
+            font-family: "Arial Narrow", system-ui;
+            margin: 0;
         }
 
         main {
@@ -19,6 +20,9 @@
             font-weight: bold;
             line-height: 1;
             user-select: none;
+            height: 100vmin;
+            display: flex;
+            align-items: center;
         }
 
         body.no-sec main {
@@ -28,27 +32,57 @@
         body.no-sec #secondsPart {
             display: none;
         }
+
+        aside {
+            font-size: large;
+            position: fixed;
+            inset: 0 auto 0 0;
+            width: 20rem;
+            max-width: 90vw;
+            background-color: darkgray;
+            padding: 1rem;
+        }
+
+        button {font-size: large;}
+
+        aside>button:first-child,
+        main>button:first-child {
+            margin-bottom: 1rem;
+        }
+
+        main>button:first-child {
+            position: absolute;
+            inset: 1rem auto auto 1rem;
+        }
     </style>
 </head>
 
 <body>
-    <main><span id="hours">00</span>:<span id="minutes">00</span><span id="secondsPart">:<span
-                id="seconds">00</span></span></main>
-    <fieldset>
-        <legend>Settings</legend>
-        <div>
-            <input type="checkbox" id="secondsToggle" onchange="toggleSeconds()" checked>
-            <label for="secondsToggle">Show seconds</label>
-        </div>
-        <!-- <div>
-            <label for="timezone">Time zone</label>
-            <select id="timezone" onchange="tzChange()">
-                <option value="none" selected>Client</option>
-                <option value="kl">Greenland</option>
-                <option value="dk">Denmark</option>
-            </select>
-        </div> -->
-    </fieldset>
+    <main>
+        <button onclick="document.querySelector('aside').removeAttribute('hidden')">Settings</button>
+        <span id="hours">00</span>:<span id="minutes">00</span><span id="secondsPart">:<span
+                id="seconds">00</span></span>
+    </main>
+    <aside hidden>
+        <button title="Close" onclick="this.parentElement.setAttribute('hidden', true)">&times;</button>
+        <fieldset style="margin-bottom: 1rem;">
+            <legend>Settings</legend>
+            <div>
+                <input type="checkbox" id="secondsToggle" onchange="toggleSeconds()" checked>
+                <label for="secondsToggle">Show seconds</label>
+            </div>
+            <!-- <div>
+                <label for="timezone">Time zone</label>
+                <select id="timezone" onchange="tzChange()">
+                    <option value="none" selected>Client</option>
+                    <option value="kl">Greenland</option>
+                    <option value="dk">Denmark</option>
+                </select>
+            </div> -->
+        </fieldset>
+        <button onclick="openFullscreen()">Fullscreen</button>
+        <button onclick="exitFullscreen()">Exit fullscreen</button>
+    </aside>
     <script>
         const h = document.getElementById("hours");
         const m = document.getElementById("minutes");
@@ -75,6 +109,20 @@
                 b.classList.remove("no-sec");
             } else {
                 b.classList.add("no-sec");
+            }
+        }
+
+        function openFullscreen() {
+            var elem = document.documentElement;
+            if (elem.requestFullscreen) {
+                elem.requestFullscreen();
+            }
+        }
+
+        function exitFullscreen() {
+            var elem = document.documentElement;
+            if (elem.exitFullscreen) {
+                elem.exitFullscreen();
             }
         }
     </script>
