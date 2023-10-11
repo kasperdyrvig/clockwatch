@@ -1,0 +1,32 @@
+{
+    "name": "Clockwatch",
+    "short_name": "Clockwatch",
+    "start_url": ".",
+    "display": "fullscreen",
+    "background_color": "#fff",
+    "theme_color": "black",
+    "description": "Watch the clock",
+    "icons": [
+      {
+        "src": "icon72.png",
+        "sizes": "72x72",
+        "type": "image/png"
+      },
+      {
+        "src": "icon96.png",
+        "sizes": "96x96",
+        "type": "image/png"
+      },
+      {
+        "src": "icon144.png",
+        "sizes": "144x144",
+        "type": "image/png"
+      },
+      {
+        "src": "icon192.png",
+        "sizes": "192x192",
+        "type": "image/png"
+      }
+    ]
+  }
+  

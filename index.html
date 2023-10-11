@@ -3,6 +3,8 @@
 
 <head>
     <meta charset="UTF-8">
+    <meta name="robots" content="noindex,nofollow">
+    <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clockwatch</title>
     <style>
@@ -43,7 +45,9 @@
             padding: 1rem;
         }
 
-        button {font-size: large;}
+        button {
+            font-size: large;
+        }
 
         aside>button:first-child,
         main>button:first-child {
@@ -84,6 +88,25 @@
         <button onclick="exitFullscreen()">Exit fullscreen</button>
     </aside>
     <script>
+        const registerServiceWorker = async () => {
+            if ("serviceWorker" in navigator) {
+                try {
+                    const registration = await navigator.serviceWorker.register("/sw.js", {
+                        scope: "/",
+                    });
+                    if (registration.installing) {
+                        console.log("Service worker installing");
+                    } else if (registration.waiting) {
+                        console.log("Service worker installed");
+                    } else if (registration.active) {
+                        console.log("Service worker active");
+                    }
+                } catch (error) {
+                    console.error(`Registration failed with ${error}`);
+                }
+            }
+        };
+
         const h = document.getElementById("hours");
         const m = document.getElementById("minutes");
         const s = document.getElementById("seconds");
@@ -125,6 +148,8 @@
                 elem.exitFullscreen();
             }
         }
+
+        registerServiceWorker();
     </script>
 </body>
 
