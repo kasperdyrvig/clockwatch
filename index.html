@@ -18,13 +18,11 @@
 
         main {
             font-size: 25vw;
-            text-align: center;
             font-weight: bold;
             line-height: 1;
             user-select: none;
             height: 100vmin;
-            display: flex;
-            align-items: center;
+            place-content: center;
         }
 
         body.no-sec main {
@@ -33,6 +31,13 @@
 
         body.no-sec #secondsPart {
             display: none;
+        }
+
+        #zone:not(:empty) {
+            font-size: 1rem;
+            font-weight: normal;
+            text-align: center;
+            margin-top: 2rem;
         }
 
         aside {
@@ -58,34 +63,48 @@
             position: absolute;
             inset: 1rem auto auto 1rem;
         }
+
+        select {
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            font-size: inherit;
+        }
     </style>
 </head>
 
 <body>
     <main>
         <button onclick="document.querySelector('aside').removeAttribute('hidden')">Settings</button>
+        <div id="clock">
         <span id="hours">00</span>:<span id="minutes">00</span><span id="secondsPart">:<span
                 id="seconds">00</span></span>
+                </div>
+        <div id="zone"></div>
     </main>
     <aside hidden>
         <button title="Close" onclick="this.parentElement.setAttribute('hidden', true)">&times;</button>
         <fieldset style="margin-bottom: 1rem;">
-            <legend>Settings</legend>
-            <div>
+            <legend>Clock</legend>
+            <div style="margin-bottom: 1rem;">
                 <input type="checkbox" id="secondsToggle" onchange="toggleSeconds()" checked>
                 <label for="secondsToggle">Show seconds</label>
             </div>
-            <!-- <div>
+            <div>
                 <label for="timezone">Time zone</label>
                 <select id="timezone" onchange="tzChange()">
-                    <option value="none" selected>Client</option>
-                    <option value="kl">Greenland</option>
-                    <option value="dk">Denmark</option>
+                    <option value="" selected>Client</option>
+                    <option value="America/Godthab">Greenland</option>
+                    <option value="Europe/Copenhagen">Denmark</option>
+                    <option value="America/New_York">New York</option>
                 </select>
-            </div> -->
+            </div>
         </fieldset>
-        <button onclick="openFullscreen()">Fullscreen</button>
-        <button onclick="exitFullscreen()">Exit fullscreen</button>
+        <fieldset>
+            <legend>View</legend>
+            <p><button onclick="toggleTransparency()">Toggle transparency</button></p>
+            <p><button onclick="toggleFullscreen()">Toggle fullscreen</button></p>
+        </fieldset>
     </aside>
     <script>
         const registerServiceWorker = async () => {
@@ -110,20 +129,26 @@
         const h = document.getElementById("hours");
         const m = document.getElementById("minutes");
         const s = document.getElementById("seconds");
-        let tz = "none";
+        let tz = window.Temporal ? Temporal.Now.timeZoneId() : null;
 
         function tzChange() {
             tz = document.getElementById("timezone").value;
-            console.log(tz);
+            const zone = document.getElementById("zone");
+            if (!tz) {
+                tz = window.Temporal ? Temporal.Now.timeZoneId() : null;
+                zone.textContent = "";
+                return;
+            }
+            zone.textContent = tz;
         }
 
         setInterval(updateTime, 1000);
 
         function updateTime() {
-            let time = new Date();
-            h.innerText = time.getHours().toString().padStart(2, '0');
-            m.innerText = time.getMinutes().toString().padStart(2, '0');
-            s.innerText = time.getSeconds().toString().padStart(2, '0');
+            const time = window.Temporal ? Temporal.Now.plainTimeISO(tz) : new Date();
+            h.innerText = time.hour.toString().padStart(2, '0');
+            m.innerText = time.minute.toString().padStart(2, '0');
+            s.innerText = time.second.toString().padStart(2, '0');
         }
 
         function toggleSeconds() {
@@ -135,17 +160,29 @@
             }
         }
 
-        function openFullscreen() {
-            var elem = document.documentElement;
-            if (elem.requestFullscreen) {
-                elem.requestFullscreen();
+        function toggleTransparency() {
+            const body = document.querySelector("body");
+            const bodyBg = body.style.backgroundColor;
+            if (bodyBg === "transparent") {
+                body.removeAttribute("style");
+            } else {
+                body.style.backgroundColor = "transparent";
             }
         }
 
-        function exitFullscreen() {
-            var elem = document.documentElement;
-            if (elem.exitFullscreen) {
-                elem.exitFullscreen();
+        function toggleFullscreen() {
+            element = document.documentElement;
+            console.log(document.fullscreenElement);
+            if (document.fullscreenElement) {
+                // If already in fullscreen, exit
+                if (document.exitFullscreen) {
+                    document.exitFullscreen();
+                }
+            } else {
+                // Otherwise, request fullscreen for the specified element
+                if (element.requestFullscreen) {
+                    element.requestFullscreen();
+                }
             }
         }
 
