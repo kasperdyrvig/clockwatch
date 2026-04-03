@@ -25,6 +25,10 @@
             place-content: center;
         }
 
+        main:fullscreen button{
+            display: none;
+        }
+
         body.no-sec main {
             font-size: 38vw;
         }
@@ -171,8 +175,7 @@
         }
 
         function toggleFullscreen() {
-            element = document.documentElement;
-            console.log(document.fullscreenElement);
+            element = document.querySelector("main");
             if (document.fullscreenElement) {
                 // If already in fullscreen, exit
                 if (document.exitFullscreen) {
