@@ -4,7 +4,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="robots" content="noindex,nofollow">
-    <link rel="manifest" href="manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Clockwatch</title>
     <style>
@@ -79,8 +78,7 @@
 
 <body>
     <main>
-        <button onclick="document.querySelector('aside').removeAttribute('hidden')">Settings</button>
-        <div id="clock">
+        <div id="clock" onclick="document.querySelector('aside').removeAttribute('hidden')">
         <span id="hours">00</span>:<span id="minutes">00</span><span id="secondsPart">:<span
                 id="seconds">00</span></span>
                 </div>
@@ -175,7 +173,6 @@
         }
 
         function toggleFullscreen() {
-            element = document.querySelector("main");
             if (document.fullscreenElement) {
                 // If already in fullscreen, exit
                 if (document.exitFullscreen) {
@@ -183,13 +180,11 @@
                 }
             } else {
                 // Otherwise, request fullscreen for the specified element
-                if (element.requestFullscreen) {
-                    element.requestFullscreen();
+                if (document.body.requestFullscreen) {
+                    document.body.requestFullscreen();
                 }
             }
         }
-
-        registerServiceWorker();
     </script>
 </body>
 
