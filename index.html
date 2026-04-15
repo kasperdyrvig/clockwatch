@@ -147,10 +147,17 @@
         setInterval(updateTime, 1000);
 
         function updateTime() {
-            const time = window.Temporal ? Temporal.Now.plainTimeISO(tz) : new Date();
-            h.innerText = time.hour.toString().padStart(2, '0');
-            m.innerText = time.minute.toString().padStart(2, '0');
-            s.innerText = time.second.toString().padStart(2, '0');
+            if (window.Temporal) {
+                const time = Temporal.Now.plainTimeISO(tz);
+                h.innerText = time.hour.toString().padStart(2, '0');
+                m.innerText = time.minute.toString().padStart(2, '0');
+                s.innerText = time.second.toString().padStart(2, '0');
+            } else {
+                const time = new Date();
+                h.innerText = time.getHours().toString().padStart(2, '0');
+                m.innerText = time.getMinutes().toString().padStart(2, '0');
+                s.innerText = time.getSeconds().toString().padStart(2, '0');
+            }
         }
 
         function toggleSeconds() {
